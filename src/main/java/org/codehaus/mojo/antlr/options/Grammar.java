@@ -104,10 +104,10 @@ public class Grammar implements java.io.Serializable {
     public java.lang.String toString() {
         final StringBuilder buf = new StringBuilder();
         buf.append("name = '");
-        buf.append(getName() + "'");
+        buf.append(getName()).append("'");
         buf.append("\n");
         buf.append("glib = '");
-        buf.append(getGlib() + "'");
+        buf.append(getGlib()).append("'");
         return buf.toString();
     } // -- java.lang.String toString()
 

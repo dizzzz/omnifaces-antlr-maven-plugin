@@ -284,7 +284,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
 
         arguments.add(plan.getSource().getPath());
 
-        final String[] args = (String[]) arguments.toArray(new String[arguments.size()]);
+        final String[] args = (String[]) arguments.toArray(new String[0]);
 
         if (plan.getImportVocabTokenTypesDirectory() != null && !plan.getImportVocabTokenTypesDirectory().equals(plan.getGenerationDirectory())) {
             // We need to spawn a new process to properly set up PWD
@@ -431,7 +431,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
 
         File genFile = null;
 
-        if ("".equals(packageName)) {
+        if (packageName.isEmpty()) {
             genFile = new File(outputDir, generatedFileName + ".java");
         } else {
             String packagePath = packageName.replace('.', File.separatorChar);
