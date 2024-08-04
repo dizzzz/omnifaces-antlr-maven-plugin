@@ -345,7 +345,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
             }
            
             System.setErr(oldErr);
-            System.err.println(errOS.toString());
+            System.err.println(errOS);
         }
     }
 
