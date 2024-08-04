@@ -102,7 +102,7 @@ public class Grammar implements java.io.Serializable {
      * Method toString
      */
     public java.lang.String toString() {
-        String buf = "name = '" +
+        final String buf = "name = '" +
                 getName() + "'" +
                 "\n" +
                 "glib = '" +

@@ -89,7 +89,7 @@ public class GenerationPlanBuilder {
             }
         }
 
-        for (Grammar grammar : grammarFile.getGrammars()) {
+        for (final Grammar grammar : grammarFile.getGrammars()) {
             final File generatedParserFile = new File(environment.getOutputDirectory(), grammar.determineGeneratedParserPath());
 
             if (!generatedParserFile.exists()) {

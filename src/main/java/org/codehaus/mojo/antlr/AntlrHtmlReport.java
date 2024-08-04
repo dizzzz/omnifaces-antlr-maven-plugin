@@ -21,7 +21,6 @@ package org.codehaus.mojo.antlr;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -258,7 +257,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
                     sink.text(i18n.getString("antlr-report", locale, "report.grammars.noreport"));
                 } else {
                     sink.list();
-                    for (Object htmlFile : htmlFiles) {
+                    for (final Object htmlFile : htmlFiles) {
                         final File current = (File) htmlFile;
 
                         sink.listItem();

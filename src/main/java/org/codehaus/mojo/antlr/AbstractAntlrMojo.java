@@ -26,7 +26,6 @@ import static org.codehaus.plexus.util.StringUtils.isEmpty;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -209,7 +208,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
         final MetadataExtracter metadataExtracter = new MetadataExtracter(this, new Helper(antlrArtifact));
         final XRef metadata = metadataExtracter.processMetadata(getGrammars());
 
-        for (Object o : new GenerationPlanBuilder(this).buildGenerationPlans(metadata)) {
+        for (final Object o : new GenerationPlanBuilder(this).buildGenerationPlans(metadata)) {
             final GenerationPlan plan = (GenerationPlan) o;
             if (!plan.isOutOfDate()) {
                 getLog().info("grammar [" + plan.getId() + "] was up-to-date; skipping");
@@ -229,7 +228,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
     protected final Artifact locateAntlrArtifact() throws NoAntlrDependencyDefinedException {
         Artifact antlrArtifact = null;
         if (project.getCompileArtifacts() != null) {
-            for (Object o : project.getCompileArtifacts()) {
+            for (final Object o : project.getCompileArtifacts()) {
                 final Artifact artifact = (Artifact) o;
                 if ("antlr".equals(artifact.getGroupId())
                         && ("antlr".equals(artifact.getArtifactId()) || "antlr-all".equals(artifact.getArtifactId()))) {
@@ -269,7 +268,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
         arguments.add("-o");
         arguments.add(plan.getGenerationDirectory().getPath());
 
-        if (plan.getCollectedSuperGrammarIds().size() > 0) {
+        if (!plan.getCollectedSuperGrammarIds().isEmpty()) {
             arguments.add("-glib");
             final StringBuilder buffer = new StringBuilder();
             final Iterator<String> ids = plan.getCollectedSuperGrammarIds().iterator();
@@ -451,7 +450,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
      */
     private void validateParameters() throws MojoExecutionException {
         if ((isEmpty(grammars)) && ((grammarDefs == null) || (grammarDefs.length == 0))) {
-            String msg = "Antlr plugin parameters are invalid/missing." + '\n' +
+            final String msg = "Antlr plugin parameters are invalid/missing." + '\n' +
                     "Inside the definition for plugin 'antlr-maven-plugin' specify the following:" + '\n' +
                     '\n' +
                     "<configuration>" + '\n' +
@@ -494,7 +493,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
                         final String[] dir = sourceDirectory.list((dir1, s) -> Pattern.matches(transformedGrammar, s));
 
                         if ((dir != null) && (dir.length != 0)) {
-                            for (String s : dir) {
+                            for (final String s : dir) {
                                 // Just add fles which are not in the set of files already seen.
                                 if (!grammarSet.contains(s)) {
                                     final org.codehaus.mojo.antlr.options.Grammar grammar = new org.codehaus.mojo.antlr.options.Grammar();

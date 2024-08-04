@@ -53,7 +53,7 @@ public class MetadataExtracter {
         }
 
         final List<GrammarFile> files = new ArrayList<>();
-        for (org.codehaus.mojo.antlr.options.Grammar value : grammars) {
+        for (final org.codehaus.mojo.antlr.options.Grammar value : grammars) {
             final String grammarName = value.getName().trim();
             if (isEmpty(grammarName)) {
                 environment.getLog().info("Empty grammar in the configuration; skipping.");
