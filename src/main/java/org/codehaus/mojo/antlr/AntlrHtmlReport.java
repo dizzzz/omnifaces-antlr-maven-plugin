@@ -91,7 +91,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * @see org.apache.maven.reporting.MavenReport#getName(java.util.Locale)
      */
     @Override
-    public String getName(Locale locale) {
+    public String getName(final Locale locale) {
         if (StringUtils.isEmpty(name)) {
             return i18n.getString("antlr-report", locale, "report.name");
         }
@@ -103,7 +103,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * @see org.apache.maven.reporting.MavenReport#getDescription(java.util.Locale)
      */
     @Override
-    public String getDescription(Locale locale) {
+    public String getDescription(final Locale locale) {
         if (StringUtils.isEmpty(description)) {
             return i18n.getString("antlr-report", locale, "report.description");
         }
@@ -115,7 +115,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * @see org.codehaus.mojo.antlr.AbstractAntlrMojo#addArgs(java.util.List)
      */
     @Override
-    protected void addArgs(List arguments) {
+    protected void addArgs(final List arguments) {
         // ----------------------------------------------------------------------
         // See http://www.antlr2.org/doc/options.html#Command%20Line%20Options
         // ----------------------------------------------------------------------
@@ -127,16 +127,16 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * @see org.apache.maven.reporting.MavenReport#generate(org.codehaus.doxia.sink.Sink, java.util.Locale)
      */
     @Override
-    public void generate(Sink sink, Locale locale) throws MavenReportException {
+    public void generate(final Sink sink, final Locale locale) throws MavenReportException {
         outputDirectory = getReportOutputDirectory();
 
         try {
             executeAntlr();
-        } catch (MojoExecutionException e) {
+        } catch (final MojoExecutionException e) {
             throw new MavenReportException("Antlr execution failed: " + e.getMessage(), e);
         }
 
-        AntlrRenderer r = new AntlrRenderer(sink, outputDirectory, i18n, Locale.ENGLISH);
+        final AntlrRenderer r = new AntlrRenderer(sink, outputDirectory, i18n, Locale.ENGLISH);
         r.render();
     }
 
@@ -188,7 +188,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * @see org.apache.maven.reporting.MavenReport#setReportOutputDirectory(java.io.File)
      */
     @Override
-    public void setReportOutputDirectory(File reportOutputDirectory) {
+    public void setReportOutputDirectory(final File reportOutputDirectory) {
         if ((reportOutputDirectory != null) && (!reportOutputDirectory.getAbsolutePath().endsWith("antlr"))) {
             this.reportOutputDirectory = new File(reportOutputDirectory, "antlr");
         } else {
@@ -202,11 +202,11 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            SiteRendererSink sink = new SiteRendererSink(
+            final SiteRendererSink sink = new SiteRendererSink(
                     new org.apache.maven.doxia.siterenderer.RenderingContext(getReportOutputDirectory(), getOutputName() + ".html"));
 
             generate(sink, Locale.getDefault());
-        } catch (MavenReportException e) {
+        } catch (final MavenReportException e) {
             throw new MojoExecutionException("An error has occurred in " + getName(Locale.ENGLISH) + " report generation.", e);
         }
     }
@@ -215,13 +215,13 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
      * Renderer report
      */
     private static class AntlrRenderer extends AbstractMavenReportRenderer {
-        private File outputDirectory;
+        private final File outputDirectory;
 
-        private I18N i18n;
+        private final I18N i18n;
 
-        private Locale locale;
+        private final Locale locale;
 
-        AntlrRenderer(Sink sink, File outputDirectory, I18N i18n, Locale locale) {
+        AntlrRenderer(final Sink sink, final File outputDirectory, final I18N i18n, final Locale locale) {
             super(sink);
 
             this.outputDirectory = outputDirectory;
@@ -253,14 +253,14 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
             startSection(i18n.getString("antlr-report", locale, "report.grammars.title"));
 
             try {
-                List htmlFiles = FileUtils.getFiles(outputDirectory, "**/*.html", "**/*index.html");
+                final List htmlFiles = FileUtils.getFiles(outputDirectory, "**/*.html", "**/*index.html");
 
                 if (htmlFiles.isEmpty()) {
                     sink.text(i18n.getString("antlr-report", locale, "report.grammars.noreport"));
                 } else {
                     sink.list();
-                    for (Iterator it = htmlFiles.iterator(); it.hasNext();) {
-                        File current = (File) it.next();
+                    for (final Iterator it = htmlFiles.iterator(); it.hasNext();) {
+                        final File current = (File) it.next();
 
                         sink.listItem();
                         sink.link(PathUtils.toRelative(outputDirectory, current.getAbsolutePath()));
@@ -270,7 +270,7 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
                     }
                     sink.list_();
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException("IOException: " + e.getMessage(), e);
             }
 
