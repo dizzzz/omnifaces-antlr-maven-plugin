@@ -492,12 +492,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
                                 .replaceAll("\\?", ".");
 
                         // Filter the source directory
-                        final String[] dir = sourceDirectory.list(new FilenameFilter() {
-                            @Override
-                            public boolean accept(final File dir, final String s) {
-                                return Pattern.matches(transformedGrammar, s);
-                            }
-                        });
+                        final String[] dir = sourceDirectory.list((dir1, s) -> Pattern.matches(transformedGrammar, s));
 
                         if ((dir != null) && (dir.length != 0)) {
                             for (String s : dir) {
