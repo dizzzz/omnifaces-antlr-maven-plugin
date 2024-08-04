@@ -274,7 +274,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
             final StringBuilder buffer = new StringBuilder();
             final Iterator<String> ids = plan.getCollectedSuperGrammarIds().iterator();
             while (ids.hasNext()) {
-                buffer.append(new File(sourceDirectory, (String) ids.next()));
+                buffer.append(new File(sourceDirectory, ids.next()));
                 if (ids.hasNext()) {
                     buffer.append(';');
                 }
@@ -284,7 +284,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
 
         arguments.add(plan.getSource().getPath());
 
-        final String[] args = (String[]) arguments.toArray(new String[0]);
+        final String[] args = arguments.toArray(new String[0]);
 
         if (plan.getImportVocabTokenTypesDirectory() != null && !plan.getImportVocabTokenTypesDirectory().equals(plan.getGenerationDirectory())) {
             // We need to spawn a new process to properly set up PWD
@@ -325,7 +325,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
         System.setErr(err);
 
         try {
-            executeAntlrInIsolatedClassLoader((String[]) arguments.toArray(new String[0]), antlrArtifact);
+            executeAntlrInIsolatedClassLoader(arguments.toArray(new String[0]), antlrArtifact);
         } catch (final RuntimeException e) {
             if (e.getMessage().contains("ANTLR Panic")) {
                 // ANTLR-12
@@ -356,7 +356,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
         try (final URLClassLoader classLoader = new URLClassLoader(new URL[] { antlrArtifact.getFile().toURI().toURL() }, getSystemClassLoader())) {
 
             classLoader.loadClass("antlr.Tool")
-                       .getMethod("main", new Class[] { String[].class })
+                       .getMethod("main", String[].class)
                        .invoke(null, new Object[] { args });
             
         } catch (final MalformedURLException e) {
@@ -451,17 +451,16 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
      */
     private void validateParameters() throws MojoExecutionException {
         if ((isEmpty(grammars)) && ((grammarDefs == null) || (grammarDefs.length == 0))) {
-            final StringBuilder msg = new StringBuilder();
-            msg.append("Antlr plugin parameters are invalid/missing.").append('\n');
-            msg.append("Inside the definition for plugin 'antlr-maven-plugin' specify the following:").append('\n');
-            msg.append('\n');
-            msg.append("<configuration>").append('\n');
-            msg.append("  <grammars>VALUE</grammars>").append('\n');
-            msg.append("- OR - ").append('\n');
-            msg.append("  <grammarDefs>VALUE</grammarDefs>").append('\n');
-            msg.append("</configuration>").append('\n');
+            String msg = "Antlr plugin parameters are invalid/missing." + '\n' +
+                    "Inside the definition for plugin 'antlr-maven-plugin' specify the following:" + '\n' +
+                    '\n' +
+                    "<configuration>" + '\n' +
+                    "  <grammars>VALUE</grammars>" + '\n' +
+                    "- OR - " + '\n' +
+                    "  <grammarDefs>VALUE</grammarDefs>" + '\n' +
+                    "</configuration>" + '\n';
 
-            throw new MojoExecutionException(msg.toString());
+            throw new MojoExecutionException(msg);
         }
     }
 
@@ -521,7 +520,7 @@ public abstract class AbstractAntlrMojo extends AbstractMojo implements Environm
             grammarList.addAll(asList(grammarDefs));
         }
 
-        return (org.codehaus.mojo.antlr.options.Grammar[]) grammarList.toArray(new org.codehaus.mojo.antlr.options.Grammar[0]);
+        return grammarList.toArray(new org.codehaus.mojo.antlr.options.Grammar[0]);
     }
 
     public static class NoAntlrDependencyDefinedException extends MojoExecutionException {

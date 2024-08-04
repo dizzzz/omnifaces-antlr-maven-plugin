@@ -44,7 +44,7 @@ public class MetadataExtracter {
         try {
             final Object antlrTool = helper.getAntlrToolClass().getDeclaredConstructor().newInstance();
             hierarchy = antlrHierarchyClass.getConstructor(new Class[] { helper.getAntlrToolClass() })
-                                           .newInstance(new Object[] { antlrTool });
+                                           .newInstance(antlrTool);
 
             readGrammarFileMethod = antlrHierarchyClass.getMethod("readGrammarFile", Helper.STRING_ARG_SIGNATURE);
             getFileMethod = antlrHierarchyClass.getMethod("getFile", Helper.STRING_ARG_SIGNATURE);
@@ -90,7 +90,7 @@ public class MetadataExtracter {
             files.add(grammarFile);
 
             try {
-                readGrammarFileMethod.invoke(hierarchy, new Object[]{grammarFilePath});
+                readGrammarFileMethod.invoke(hierarchy, grammarFilePath);
             } catch (final Throwable t) {
                 throw new MojoExecutionException("Unable to use Antlr preprocessor to read grammar file", causeToUse(t));
             }
@@ -100,7 +100,7 @@ public class MetadataExtracter {
         for (final GrammarFile gf : files) {
             final String grammarFilePath = gf.getFileName();
             try {
-                final Object antlrGrammarFileDef = getFileMethod.invoke(hierarchy, new Object[] { grammarFilePath });
+                final Object antlrGrammarFileDef = getFileMethod.invoke(hierarchy, grammarFilePath);
                 intrepretMetadata(gf, antlrGrammarFileDef);
                 xref.addGrammarFile(gf);
             } catch (final Throwable t) {
@@ -147,13 +147,13 @@ public class MetadataExtracter {
             getOptionsMethod.setAccessible(true);
             final Object options = getOptionsMethod.invoke(antlrGrammarDef, NO_ARGS);
 
-            final Method getElementMethod = helper.getAntlrIndexedVectorClass().getMethod("getElement", new Class[] { Object.class });
+            final Method getElementMethod = helper.getAntlrIndexedVectorClass().getMethod("getElement", Object.class);
             getElementMethod.setAccessible(true);
 
             final Method getRHSMethod = helper.getAntlrOptionClass().getMethod("getRHS", NO_ARG_SIGNATURE);
             getRHSMethod.setAccessible(true);
 
-            final Object importVocabOption = getElementMethod.invoke(options, new Object[] { "importVocab" });
+            final Object importVocabOption = getElementMethod.invoke(options, "importVocab");
             if (importVocabOption != null) {
                 String importVocab = (String) getRHSMethod.invoke(importVocabOption, NO_ARGS);
                 if (importVocab != null) {
@@ -165,7 +165,7 @@ public class MetadataExtracter {
                 }
             }
 
-            final Object exportVocabOption = getElementMethod.invoke(options, new Object[] { "exportVocab" });
+            final Object exportVocabOption = getElementMethod.invoke(options, "exportVocab");
             if (exportVocabOption != null) {
                 String exportVocab = (String) getRHSMethod.invoke(exportVocabOption, NO_ARGS);
                 if (exportVocab != null) {

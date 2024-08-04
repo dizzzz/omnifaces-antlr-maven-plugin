@@ -63,14 +63,14 @@ public class XRef {
     }
 
     public GrammarFile getGrammarFileById(final String id) {
-        return (GrammarFile) filesById.get(id);
+        return filesById.get(id);
     }
 
     public GrammarFile getGrammarFileByClassName(final String className) {
-        return (GrammarFile) filesByClassName.get(className);
+        return filesByClassName.get(className);
     }
 
     public GrammarFile getGrammarFileByExportVocab(final String exportVocab) {
-        return (GrammarFile) filesByExportVocab.get(exportVocab);
+        return filesByExportVocab.get(exportVocab);
     }
 }
