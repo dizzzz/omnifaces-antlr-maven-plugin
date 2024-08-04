@@ -50,7 +50,7 @@ public class GenerationPlanBuilder {
     public synchronized List buildGenerationPlans(XRef metadataXRef) {
         this.metadataXRef = metadataXRef;
 
-        final Iterator grammarFiles = metadataXRef.iterateGrammarFiles();
+        final Iterator<GrammarFile> grammarFiles = metadataXRef.iterateGrammarFiles();
         while (grammarFiles.hasNext()) {
             final GrammarFile grammarFile = (GrammarFile) grammarFiles.next();
             // NOTE : loacteOrBuildGenerationPlan populates the generationPlans map
@@ -89,9 +89,7 @@ public class GenerationPlanBuilder {
             }
         }
 
-        final Iterator grammars = grammarFile.getGrammars().iterator();
-        while (grammars.hasNext()) {
-            final Grammar grammar = (Grammar) grammars.next();
+        for (Grammar grammar : grammarFile.getGrammars()) {
             final File generatedParserFile = new File(environment.getOutputDirectory(), grammar.determineGeneratedParserPath());
 
             if (!generatedParserFile.exists()) {

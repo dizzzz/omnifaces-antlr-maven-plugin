@@ -53,8 +53,8 @@ public class MetadataExtracter {
         }
 
         final List<GrammarFile> files = new ArrayList<>();
-        for (int i = 0; i < grammars.length; i++) {
-            final String grammarName = grammars[i].getName().trim();
+        for (org.codehaus.mojo.antlr.options.Grammar value : grammars) {
+            final String grammarName = value.getName().trim();
             if (isEmpty(grammarName)) {
                 environment.getLog().info("Empty grammar in the configuration; skipping.");
                 continue;
@@ -68,13 +68,13 @@ public class MetadataExtracter {
 
             final String grammarFilePath = grammar.getPath();
             final GrammarFile grammarFile = new GrammarFile(
-                    grammarName, 
+                    grammarName,
                     grammarFilePath,
-                    isNotEmpty(grammars[i].getGlib()) ? split(grammars[i].getGlib(), ":,") : new String[0]);
+                    isNotEmpty(value.getGlib()) ? split(value.getGlib(), ":,") : new String[0]);
 
             // :( antlr.preprocessor.GrammarFile's only access to package is through a protected field :(
             try (final BufferedReader in = new BufferedReader(new FileReader(grammar))) {
-                
+
                 String line;
                 while ((line = in.readLine()) != null) {
                     line = line.trim();
@@ -83,15 +83,14 @@ public class MetadataExtracter {
                         break;
                     }
                 }
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
 
             files.add(grammarFile);
 
             try {
-                readGrammarFileMethod.invoke(hierarchy, new Object[] { grammarFilePath });
+                readGrammarFileMethod.invoke(hierarchy, new Object[]{grammarFilePath});
             } catch (final Throwable t) {
                 throw new MojoExecutionException("Unable to use Antlr preprocessor to read grammar file", causeToUse(t));
             }

@@ -258,8 +258,8 @@ public class AntlrHtmlReport extends AbstractAntlrMojo implements MavenReport {
                     sink.text(i18n.getString("antlr-report", locale, "report.grammars.noreport"));
                 } else {
                     sink.list();
-                    for (final Iterator it = htmlFiles.iterator(); it.hasNext();) {
-                        final File current = (File) it.next();
+                    for (Object htmlFile : htmlFiles) {
+                        final File current = (File) htmlFile;
 
                         sink.listItem();
                         sink.link(PathUtils.toRelative(outputDirectory, current.getAbsolutePath()));

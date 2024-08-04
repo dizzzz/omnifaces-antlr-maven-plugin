@@ -42,8 +42,8 @@ public class GenerationPlan {
         this.source = source;
         this.generationDirectory = generationDirectory;
         if (glibIds != null) {
-            for (int i = 0; i < glibIds.length; i++) {
-                addSuperGrammarId(glibIds[i]);
+            for (String glibId : glibIds) {
+                addSuperGrammarId(glibId);
             }
         }
     }
